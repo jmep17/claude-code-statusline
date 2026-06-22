@@ -1,4 +1,17 @@
-# claude-code-statusline
+# dev-config
+
+Personal dev-environment config and local tooling.
+
+## Contents
+
+| Path | What |
+| --- | --- |
+| [`work-statusline.sh`](work-statusline.sh) | Two-row Claude Code status line (Bash + `jq`). See below. |
+| [`whisper-mic/`](whisper-mic/) | Real-time mic transcription on Apple Silicon via whisper.cpp (Metal + Core ML). See [`whisper-mic/README.md`](whisper-mic/README.md). |
+
+---
+
+## Claude Code status line
 
 A two-row [Claude Code](https://code.claude.com/docs/en/statusline) status line written in Bash + `jq`.
 
@@ -12,7 +25,7 @@ A two-row [Claude Code](https://code.claude.com/docs/en/statusline) status line 
 
 The context bar is color-coded: green under 70%, yellow 70–89%, red 90%+.
 
-## Install
+### Install
 
 1. Copy `work-statusline.sh` to your machine (e.g. `~/.claude/work-statusline.sh`) and make it executable:
    ```bash
@@ -34,7 +47,7 @@ The context bar is color-coded: green under 70%, yellow 70–89%, red 90%+.
    }
    ```
 
-## When it updates
+### When it updates
 
 The status line is **not** a hook — it is configured under its own `statusLine` key in `settings.json`, and Claude Code runs it automatically. No extra wiring is needed.
 
@@ -62,19 +75,19 @@ Triggers go quiet while the session is **idle**. The git branch is the only fiel
 
 This is optional — the per-turn data updates without it.
 
-## Test without launching Claude Code
+### Test without launching Claude Code
 
 ```bash
 echo '{"model":{"display_name":"Opus"},"effort":{"level":"high"},"workspace":{"current_dir":"/tmp/proj"},"cost":{"total_cost_usd":0.5},"context_window":{"used_percentage":42,"current_usage":{"input_tokens":8500,"cache_creation_input_tokens":5000,"cache_read_input_tokens":120000}}}' | ~/.claude/work-statusline.sh
 ```
 
-## Notes
+### Notes
 
 - **Cache % is for the most recent API turn only.** Claude Code does not expose a session-wide cache figure on stdin, so the script reports the last turn's rate, computed as `cache_read / (input + cache_creation + cache_read)`. It shows `n/a` before the first response and right after `/compact`, until the next API call repopulates the data.
 - **Branch needs a git repo.** It is blank outside one. The script `cd`s into the session directory first, so it resolves the branch even when Claude Code is launched elsewhere.
 - **Effort shows `—`** when the active model does not support the reasoning-effort parameter.
 
-## Field mapping
+### Field mapping
 
 | Display | Source field (statusLine stdin JSON) |
 | --- | --- |
