@@ -34,6 +34,34 @@ The context bar is color-coded: green under 70%, yellow 70–89%, red 90%+.
    }
    ```
 
+## When it updates
+
+The status line is **not** a hook — it is configured under its own `statusLine` key in `settings.json`, and Claude Code runs it automatically. No extra wiring is needed.
+
+It re-runs on:
+
+- every new assistant message
+- after `/compact` finishes
+- a permission-mode change
+- a vim-mode toggle
+
+Updates are debounced ~300ms, and if a new trigger fires while a run is still in flight, that run is cancelled. So model, effort, context %, cache %, and cost refresh **every turn**.
+
+Triggers go quiet while the session is **idle**. The git branch is the only field that can change without a new message (e.g. a `git checkout` in another terminal); it refreshes on your next turn rather than instantly. To also re-run on a fixed timer during idle periods, add `refreshInterval` (in seconds):
+
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/work-statusline.sh",
+    "padding": 0,
+    "refreshInterval": 5
+  }
+}
+```
+
+This is optional — the per-turn data updates without it.
+
 ## Test without launching Claude Code
 
 ```bash
