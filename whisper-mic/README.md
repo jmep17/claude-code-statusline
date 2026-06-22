@@ -8,6 +8,20 @@ This directory is a **thin wrapper**. The actual engine, build, and model live
 in `~/whisper.cpp` (kept out of this repo — it's multi-GB). `mic.sh` just
 launches the `whisper-stream` binary with live-mic defaults.
 
+## Install (fresh machine)
+
+On a new Apple Silicon Mac (e.g. work laptop), the engine isn't in this repo —
+build it once:
+
+```bash
+./setup.sh
+```
+
+Idempotent: installs sdl2 + cmake, clones & builds whisper.cpp (Metal + Core ML
++ SDL2), downloads the model, generates the Core ML encoder. Core ML is
+best-effort — if its Python toolchain fails, you still get a working Metal mic.
+Re-run anytime to retry/update.
+
 ## Use
 
 ```bash
